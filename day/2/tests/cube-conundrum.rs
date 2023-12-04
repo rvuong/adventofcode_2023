@@ -118,3 +118,79 @@ fn test_get_possible_examples_sum_of_ids() {
 
     assert_eq!(possible_games.iter().sum::<u32>(), 8);
 }
+
+fn test_fewest_number_of_cubes(line: &str, expected: Set, expected_power: u32) {
+    let result_set = cube_conundrum::get_fewest_cubes(line);
+    match result_set {
+        Some(s) => {
+            assert_eq!(s, expected);
+            assert_eq!(s.power(), expected_power);
+        }
+        None => assert!(false),
+    }
+}
+
+#[test]
+fn test_fewest_number_of_cubes_1() {
+    let line = "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green";
+    let expected = Set {
+        red: 4,
+        green: 2,
+        blue: 6,
+    };
+    let expected_power: u32 = 48;
+
+    test_fewest_number_of_cubes(line, expected, expected_power);
+}
+
+#[test]
+fn test_fewest_number_of_cubes_2() {
+    let line = "Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue";
+    let expected = Set {
+        red: 1,
+        green: 3,
+        blue: 4,
+    };
+    let expected_power: u32 = 12;
+
+    test_fewest_number_of_cubes(line, expected, expected_power);
+}
+
+#[test]
+fn test_fewest_number_of_cubes_3() {
+    let line = "Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red";
+    let expected = Set {
+        red: 20,
+        green: 13,
+        blue: 6,
+    };
+    let expected_power: u32 = 1560;
+
+    test_fewest_number_of_cubes(line, expected, expected_power);
+}
+
+#[test]
+fn test_fewest_number_of_cubes_4() {
+    let line = "Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red";
+    let expected = Set {
+        red: 14,
+        green: 3,
+        blue: 15,
+    };
+    let expected_power: u32 = 630;
+
+    test_fewest_number_of_cubes(line, expected, expected_power);
+}
+
+#[test]
+fn test_fewest_number_of_cubes_5() {
+    let line = "Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green";
+    let expected = Set {
+        red: 6,
+        green: 3,
+        blue: 2,
+    };
+    let expected_power: u32 = 36;
+
+    test_fewest_number_of_cubes(line, expected, expected_power);
+}

@@ -1,4 +1,5 @@
 use regex::Regex;
+use std::cmp;
 use std::fs::read_to_string;
 
 #[derive(Debug, PartialEq)]
@@ -65,6 +66,10 @@ impl Set {
 
         Some(result)
     }
+
+    pub fn power(&self) -> u32 {
+        self.red * self.green * self.blue
+    }
 }
 
 pub fn get_game_from_line(line: &str) -> Option<Game> {
@@ -114,4 +119,42 @@ pub fn get_possible_games_ids_sum(file: &str) -> u32 {
         .collect();
 
     possible_games.iter().sum::<u32>()
+}
+
+pub fn get_fewest_cubes(line: &str) -> Option<Set> {
+    let game_result = Game::from(line);
+    game_result.as_ref()?;
+
+    let mut fewests: Set = Set {
+        red: 0,
+        green: 0,
+        blue: 0,
+    };
+    let game = game_result.unwrap();
+    for i in game.sets {
+        fewests.red = cmp::max(i.red, fewests.red);
+        fewests.green = cmp::max(i.green, fewests.green);
+        fewests.blue = cmp::max(i.blue, fewests.blue);
+    }
+
+    Some(fewests)
+}
+
+pub fn get_powers_sum(file: &str) -> u32 {
+    let content = read_to_string(file).expect("Invalid input file");
+    let games_lines: Vec<&str> = content.lines().collect();
+
+    let game_powers: Vec<u32> = games_lines
+        .iter()
+        .map(|&gl| {
+            // let game = Game::from(gl);
+            let result_set = get_fewest_cubes(gl);
+            match result_set {
+                Some(s) => s.power(),
+                None => 0,
+            }
+        })
+        .collect();
+
+    game_powers.iter().sum::<u32>()
 }
