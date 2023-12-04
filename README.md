@@ -5,6 +5,7 @@ Advent of Code 2023
 
 - Day 2 and day 3 were not done on time, due to weekend time. Starting on monday...
 - Step 1 was done successfully.
+- Step 2 was done successfully.
 
 ## Day 1
 
