@@ -1,4 +1,4 @@
-use scratchpads::Card;
+use scratchpads::{get_scratchpads, Card};
 use std::fs::read_to_string;
 
 #[test]
@@ -70,7 +70,6 @@ fn test_input_card_1() {
     assert_eq!(card.get_points(), 512);
 }
 
-
 #[test]
 fn test_example_card_all() {
     let input = read_to_string("./sample.txt").expect("Invalid input file");
@@ -86,4 +85,20 @@ fn test_example_card_all() {
         .sum();
 
     assert_eq!(sum, 13);
+}
+
+#[test]
+fn test_step_2_total_scratchpads() {
+    let input = read_to_string("./sample.txt").expect("Invalid input file");
+    let lines: Vec<&str> = input.lines().collect();
+    let scratchpads: Vec<u32> = get_scratchpads(&lines);
+
+    assert_eq!(
+        scratchpads,
+        vec![
+            1, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+            6
+        ]
+    );
+    assert_eq!(scratchpads.len(), 30);
 }

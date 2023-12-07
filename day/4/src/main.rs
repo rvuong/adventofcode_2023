@@ -1,4 +1,4 @@
-use scratchpads::Card;
+use scratchpads::{get_scratchpads, Card};
 use std::fs::read_to_string;
 
 fn main() {
@@ -13,6 +13,11 @@ fn main() {
             card.get_points()
         })
         .sum();
+    println!("Step 1: sum of points: {:?}", sum);
 
-    println!("sum: {:?}", sum);
+    // let scratchpads: Vec<u32> = get_scratchpads(&lines);
+    // println!(
+    //     "Step 2: number of total scratchpads: {:?}",
+    //     scratchpads.len()
+    // );
 }

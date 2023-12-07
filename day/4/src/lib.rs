@@ -1,11 +1,31 @@
 use regex::Regex;
+use std::cmp::Ordering;
 use std::collections::HashSet;
 
+#[derive(Debug, Clone, Eq)]
 pub struct Card {
     number: u32,
     winning_numbers: Vec<u32>,
     numbers_you_have: Vec<u32>,
     winning_numbers_you_have: Vec<u32>,
+}
+
+impl Ord for Card {
+    fn cmp(&self, other: &Self) -> Ordering {
+        self.number.cmp(&other.number)
+    }
+}
+
+impl PartialOrd for Card {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl PartialEq for Card {
+    fn eq(&self, other: &Self) -> bool {
+        self.number == other.number
+    }
 }
 
 impl Card {
@@ -98,4 +118,33 @@ fn vectors_intersect(v1: &[u32], v2: &[u32]) -> Vec<u32> {
     v.sort();
 
     v
+}
+
+pub fn get_scratchpads(lines: &[&str]) -> Vec<u32> {
+    // Get original Cards
+    let original_cards: Vec<Card> = lines.iter().map(|line| Card::from(line).unwrap()).collect();
+
+    // Get processed Cards
+    let mut cards: Vec<Card> = lines.iter().map(|line| Card::from(line).unwrap()).collect();
+
+    // Add copies of Cards
+    let mut i = 0;
+    while i < cards.len() && i < 50000 {
+        let card = cards.get(i).unwrap();
+        let number_of_winning_numbers_you_have = card.get_winning_numbers_you_have().len() as u32;
+        if number_of_winning_numbers_you_have > 0 {
+            // Get numbers of cards to be copied, add then to the Vec
+            for n in
+                (card.get_number() + 1)..=(card.get_number() + number_of_winning_numbers_you_have)
+            {
+                let new_card = original_cards.get(n as usize - 1).unwrap();
+                cards.push(Card::clone(new_card));
+            }
+            cards.sort();
+        }
+
+        i += 1;
+    }
+
+    cards.iter().map(|c| c.get_number()).collect()
 }
