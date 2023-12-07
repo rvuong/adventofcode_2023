@@ -10,44 +10,35 @@ pub struct Card {
 
 impl Card {
     pub fn from(input: &str) -> Option<Self> {
-        // let re: Regex = Regex::new(r"^Card (?<number>[0-9]+)\: (?<winning_numbers>([0-9]+[ ]+)*)\|(?<numbers_you_have>([ ]+[0-9]+)*)").unwrap();
-        let re: Regex = Regex::new(r"^Card (?<number>[0-9]+)\: (?<numbers>.*)$").unwrap();
+        let re: Regex = Regex::new(r"^Card[ ]+(?<number>[0-9]+)\: (?<numbers>.*)$").unwrap();
         let matches = re.captures(input);
         match matches {
             Some(m) => {
                 let number: &str = &m["number"];
                 let number: u32 = number.parse().unwrap();
 
-                let mut numbers: Vec<&str> = m["numbers"].split(" | ").collect();
+                let numbers: Vec<&str> = m["numbers"].split(" | ").collect();
 
-                let mut winning_numbers: Vec<u32> = numbers.get(0).unwrap()
+                let mut winning_numbers: Vec<u32> = numbers
+                    .first()
+                    .unwrap()
                     .split(' ')
                     .filter(|x| !x.is_empty())
                     .map(|x: &str| x.parse::<u32>().unwrap())
                     .collect();
                 winning_numbers.sort();
 
-                // let mut numbers_you_have: Vec<u32> = numbers.get(1).unwrap()
-                //     .split(' ')
-                //     .map(|x: &str| x.parse::<u32>().unwrap())
-                //     .collect();
-                // numbers_you_have.sort();
-
-                // println!("numbers_you_have: {:?}", numbers.get(1).unwrap());
-                let mut numbers_you_have: Vec<u32> = numbers.get(1).unwrap()
+                let mut numbers_you_have: Vec<u32> = numbers
+                    .get(1)
+                    .unwrap()
                     .split(' ')
                     .filter(|x| !x.is_empty())
                     .map(|x: &str| x.parse::<u32>().unwrap())
                     .collect();
-                // println!("numbers_you_have: {:?}", numbers_you_have);
-
-                // let mut numbers_you_have = vec![0];
-                // // let mut numbers_you_have: Vec<u32> = m["numbers_you_have"].split(' ')
-                // //     .map(|s| s.parse().unwrap())
-                // //     .collect();
                 numbers_you_have.sort();
 
-                let winning_numbers_you_have = vectors_intersect(&winning_numbers, &numbers_you_have);
+                let winning_numbers_you_have =
+                    vectors_intersect(&winning_numbers, &numbers_you_have);
 
                 Some(Self {
                     number,
@@ -103,10 +94,7 @@ fn vectors_intersect(v1: &[u32], v2: &[u32]) -> Vec<u32> {
     }
 
     let intersection: HashSet<&u32> = hs1.intersection(&hs2).collect();
-    let mut v: Vec<u32> = Vec::from_iter(intersection)
-        .into_iter()
-        .copied()
-        .collect();
+    let mut v: Vec<u32> = Vec::from_iter(intersection).into_iter().copied().collect();
     v.sort();
 
     v
