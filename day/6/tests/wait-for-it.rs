@@ -14,8 +14,8 @@ fn test_sample_races() {
         let d: &str = *durations.get(i).unwrap();
         let rd: &str = *record_distances.get(i).unwrap();
         races.push(Race {
-            duration: d.parse::<u32>().unwrap(),
-            record_distance: rd.parse::<u32>().unwrap(),
+            duration: d.parse::<u64>().unwrap(),
+            record_distance: rd.parse::<u64>().unwrap(),
         });
     }
 
@@ -45,8 +45,8 @@ fn test_sample_distance_by_charge_time() {
         let d: &str = *durations.get(i).unwrap();
         let rd: &str = *record_distances.get(i).unwrap();
         races.push(Race {
-            duration: d.parse::<u32>().unwrap(),
-            record_distance: rd.parse::<u32>().unwrap(),
+            duration: d.parse::<u64>().unwrap(),
+            record_distance: rd.parse::<u64>().unwrap(),
         });
     }
 
@@ -75,8 +75,8 @@ fn test_sample_number_of_ways_to_win() {
         let d: &str = *durations.get(i).unwrap();
         let rd: &str = *record_distances.get(i).unwrap();
         races.push(Race {
-            duration: d.parse::<u32>().unwrap(),
-            record_distance: rd.parse::<u32>().unwrap(),
+            duration: d.parse::<u64>().unwrap(),
+            record_distance: rd.parse::<u64>().unwrap(),
         });
     }
 
@@ -103,14 +103,24 @@ fn test_sample_margin_error() {
         let d: &str = *durations.get(i).unwrap();
         let rd: &str = *record_distances.get(i).unwrap();
         races.push(Race {
-            duration: d.parse::<u32>().unwrap(),
-            record_distance: rd.parse::<u32>().unwrap(),
+            duration: d.parse::<u64>().unwrap(),
+            record_distance: rd.parse::<u64>().unwrap(),
         });
     }
 
-    let number_of_ways_to_win_multiplied: u32 = races
+    let number_of_ways_to_win_multiplied: u64 = races
         .iter()
         .map(|race| race.get_number_of_ways_to_win())
         .product();
     assert_eq!(number_of_ways_to_win_multiplied, 288);
+}
+
+#[test]
+fn test_sample_part_2() {
+    let race = Race {
+        duration: 71530,
+        record_distance: 940200,
+    };
+
+    assert_eq!(race.get_number_of_ways_to_win(), 71503);
 }
