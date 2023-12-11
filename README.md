@@ -1,6 +1,10 @@
 Advent of Code 2023
 ===================
 
+## Day 7: Camel Cards
+
+> That's not the right answer; your answer is too high. If you're stuck, make sure you're using the full input data; there are also some general tips on the about page, or you can ask for hints on the subreddit. Please wait one minute before trying again. [Return to Day 7]
+
 ## Day 6: Wait for it
 
 - Day 6 was done successfully, part 1 and part 2.
