@@ -25,3 +25,15 @@ fn test_sample_races() {
 
     assert_eq!(sum, 6440);
 }
+
+#[test]
+fn test_sort_cards() {
+    let hand = Hand::from("KKQK6 0");
+    let expected = Hand {
+        hand: String::from("KKKQ6"),
+        bid: 0,
+        rank: Rank::ThreeOfAKind,
+    };
+
+    assert_eq!(hand, expected);
+}

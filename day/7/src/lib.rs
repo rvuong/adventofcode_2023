@@ -90,11 +90,16 @@ impl From<&str> for Hand {
 
         let mut cards: Vec<Card> = hand.chars().map(Card::from).collect();
         cards.sort();
+        cards.reverse();
+        // println!("Cards: {:#?}", cards);
+        let sorted_hand: Vec<&str> = cards.iter().map(|card| card.card.as_str()).collect();
+        let sorted_hand: String = sorted_hand.join("");
+        // println!("Hand: {:#?}", h);
 
         let rank = Rank::get(&cards);
 
         Self {
-            hand,
+            hand: sorted_hand,
             bid: segments.get(1).unwrap().parse::<u32>().unwrap(),
             rank,
         }
@@ -103,33 +108,39 @@ impl From<&str> for Hand {
 
 impl Ord for Hand {
     fn cmp(&self, other: &Self) -> Ordering {
-        if (other.rank as u32) < (self.rank as u32) {
-            Ordering::Less
-        } else if (other.rank as u32) > (self.rank as u32) {
-            Ordering::Greater
-        } else {
-            // Compare High Card
-            let mut self_cards: Vec<Card> = self.hand.chars().map(Card::from).collect();
-            self_cards.sort();
-            self_cards.reverse();
-            // println!("> Self hand: {:#?}", self_cards);
-            let mut other_cards: Vec<Card> = other.hand.chars().map(Card::from).collect();
-            other_cards.sort();
-            other_cards.reverse();
+        match (other.rank as u32).cmp(&(self.rank as u32)) {
+            Ordering::Greater => Ordering::Greater,
+            Ordering::Less => Ordering::Less,
+            Ordering::Equal => {
+                // Compare High Card
 
-            for i in 0..self_cards.len() {
-                // println!("** s: {:?} - o: {:?}", self_cards.get(i).unwrap(), other_cards.get(i).unwrap());
+                let mut self_cards: Vec<Card> = self.hand.chars().map(Card::from).collect();
+                self_cards.sort();
+                self_cards.reverse();
+                // println!("-> self_cards: {:#?}\n", self_cards);
 
-                if self_cards.get(i).unwrap().weight < other_cards.get(i).unwrap().weight {
-                    // println!("** {:?} < {:?}", self.hand, other.hand);
-                    return Ordering::Less;
-                } else if self_cards.get(i).unwrap().weight > other_cards.get(i).unwrap().weight {
-                    // println!("** {:?} > {:?}", self.hand, other.hand);
-                    return Ordering::Greater;
+                let mut other_cards: Vec<Card> = other.hand.chars().map(Card::from).collect();
+                other_cards.sort();
+                other_cards.reverse();
+                // println!("> Self hand: {:#?} ; Other hand: {:#?}", self_cards, other_cards);
+
+                for i in 0..self_cards.len() {
+                    let self_card = self_cards.get(i).unwrap();
+                    let other_card = other_cards.get(i).unwrap();
+
+                    match self_card.cmp(other_card) {
+                        Ordering::Greater => {
+                            return Ordering::Greater;
+                        }
+                        Ordering::Less => {
+                            return Ordering::Less;
+                        }
+                        Ordering::Equal => {}
+                    };
                 }
-            }
 
-            Ordering::Equal
+                Ordering::Equal
+            }
         }
     }
 }
@@ -146,7 +157,7 @@ impl PartialEq for Hand {
     }
 }
 
-#[derive(Eq)]
+#[derive(Eq, Debug)]
 struct Card {
     card: String,
     weight: u32,
