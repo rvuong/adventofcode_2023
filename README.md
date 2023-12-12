@@ -1,7 +1,13 @@
 Advent of Code 2023
 ===================
 
+## Day 8: Haunted Wasteland
+
+- Step 1 was done successfully.
+
 ## Day 7: Camel Cards
+
+- Fail
 
 > That's not the right answer; your answer is too high. If you're stuck, make sure you're using the full input data; there are also some general tips on the about page, or you can ask for hints on the subreddit. Please wait one minute before trying again. [Return to Day 7]
 

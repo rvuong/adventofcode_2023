@@ -1,0 +1,4 @@
+[package]
+edition = "2021"
+name = "haunted-wasteland"
+version = "0.0.0"
