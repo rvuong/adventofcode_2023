@@ -2,3 +2,6 @@
 edition = "2021"
 name = "trebuchet"
 version = "0.0.0"
+
+[dependencies]
+regex = "1.10.2"

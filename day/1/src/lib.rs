@@ -1,31 +1,33 @@
+use regex::{ Captures, Regex };
 use std::fmt;
 use std::fs::read_to_string;
 
 enum Number {
-    One,
-    Two,
-    Three,
-    Four,
-    Five,
-    Six,
-    Seven,
-    Eight,
-    Nine,
+    // One,
+    // Two,
+    // Three,
+    // Four,
+    // Five,
+    // Six,
+    // Seven,
+    // Eight,
+    // Nine,
 }
 
 impl fmt::Display for Number {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            Number::One => write!(f, "one"),
-            Number::Two => write!(f, "two"),
-            Number::Three => write!(f, "three"),
-            Number::Four => write!(f, "four"),
-            Number::Five => write!(f, "five"),
-            Number::Six => write!(f, "six"),
-            Number::Seven => write!(f, "seven"),
-            Number::Eight => write!(f, "eight"),
-            Number::Nine => write!(f, "nine"),
-        }
+        // match self {
+        //     Number::One => write!(f, "one"),
+        //     Number::Two => write!(f, "two"),
+        //     Number::Three => write!(f, "three"),
+        //     Number::Four => write!(f, "four"),
+        //     Number::Five => write!(f, "five"),
+        //     Number::Six => write!(f, "six"),
+        //     Number::Seven => write!(f, "seven"),
+        //     Number::Eight => write!(f, "eight"),
+        //     Number::Nine => write!(f, "nine"),
+        // }
+        write!(f, "one")
     }
 }
 
@@ -65,57 +67,50 @@ fn numerize_string_numbers(input: String) -> String {
     // result:      "eightwothree"  -> "eigh2three" (2) -> "eigh23"
     // expected:    "eightwothree"  -> "8wothree" (8)   -> "8wo3"
     // So, we must instead parse the String from left to right, and replace case by case.
+    // println!("$> input: {:?}", input);
 
-    let mut output: String = input;
-    let mut output_len = output.len();
-    let numbers = vec![
-        Number::One,
-        Number::Two,
-        Number::Three,
-        Number::Four,
-        Number::Five,
-        Number::Six,
-        Number::Seven,
-        Number::Eight,
-        Number::Nine,
-    ];
+    let output: String = input;
 
-    let mut i = 0;
-    while i < output_len {
-        // Match each substring starting at that index, with number as words
-        for n in numbers.iter() {
-            let number = n.to_string();
-            let number_length = number.len();
+    // Replace 1st occurrence of number patterns in the string:
+    let re: Regex = Regex::new(r"(?<first>one|two|three|four|five|six|seven|eight|nine|ten)").unwrap();
+    let replaced = re.replace(&output, |caps: &Captures| {
+        let captured_number = &caps[1];
 
-            unsafe {
-                let end = i + number_length;
-                let slice = output.get_unchecked(i..end);
-
-                if slice == number {
-                    let before = output.get_unchecked(0..i);
-                    let after = output.get_unchecked(end..);
-                    let number_value = match n {
-                        Number::One => 1,
-                        Number::Two => 2,
-                        Number::Three => 3,
-                        Number::Four => 4,
-                        Number::Five => 5,
-                        Number::Six => 6,
-                        Number::Seven => 7,
-                        Number::Eight => 8,
-                        Number::Nine => 9,
-                    };
-
-                    output = format!("{}{}{}", before, number_value, after);
-                    output_len = output.len();
-                }
-            }
+        match captured_number {
+            "one" => "1",
+            "two" => "2",
+            "three" => "3",
+            "four" => "4",
+            "five" => "5",
+            "six" => "6",
+            "seven" => "7",
+            "eight" => "8",
+            _ => "9",
         }
+    });
+    let output = format!("{}", replaced);
 
-        i += 1;
-    }
+    // Replace last occurrence of number patterns in the string:
+    let reverse: String = output.chars().rev().collect();
+    let rev_re: Regex = Regex::new(r"(?<last>eno|owt|eerht|ruof|evif|xis|neves|thgie|enin|net)").unwrap();
+    let rev_replaced = rev_re.replace(&reverse, |caps: &Captures| {
+        let captured_number = &caps[1];
 
-    output
+        match captured_number {
+            "eno" => "1",
+            "owt" => "2",
+            "eerht" => "3",
+            "ruof" => "4",
+            "evif" => "5",
+            "xis" => "6",
+            "neves" => "7",
+            "thgie" => "8",
+            _ => "9",
+        }
+    });
+    let reordered: String = rev_replaced.chars().rev().collect();
+
+    reordered
 }
 
 pub fn get_two_digit_number(input: &str) -> u32 {

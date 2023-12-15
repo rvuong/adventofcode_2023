@@ -112,3 +112,19 @@ fn test_input_row_value_2() {
 
     assert_eq!(result, 63);
 }
+
+#[test]
+fn test_input_row_value_3() {
+    let input_word = "4dtlmkfnm";
+    let result = trebuchet::get_two_digit_number(input_word);
+
+    assert_eq!(result, 44);
+}
+
+#[test]
+fn test_input_row_value_4() {
+    let input_word = "fiveeightwo";
+    let result = trebuchet::get_two_digit_number(input_word);
+
+    assert_eq!(result, 52);
+}
