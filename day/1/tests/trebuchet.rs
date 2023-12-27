@@ -32,7 +32,7 @@ fn test_calibration_value_3() {
 
 #[test]
 fn test_calibration_value_4() {
-    let input_word = "two1nine";
+    let input_word = "xtwo1nine";
     let result = trebuchet::get_two_digit_number(input_word);
 
     assert_eq!(result, 29);
@@ -87,7 +87,6 @@ fn test_calibration_value_10() {
 }
 
 #[test]
-#[ignore]
 fn test_input_row_value_0() {
     let input_word = "fivepqxlpninevh2xxsnsgg63pbvdnqptmg";
     let result = trebuchet::get_two_digit_number(input_word);
@@ -96,7 +95,6 @@ fn test_input_row_value_0() {
 }
 
 #[test]
-#[ignore]
 fn test_input_row_value_1() {
     let input_word = "eight8zlctbmsixhrvbpjb84nnmlcqkzrsix";
     let result = trebuchet::get_two_digit_number(input_word);
@@ -105,7 +103,6 @@ fn test_input_row_value_1() {
 }
 
 #[test]
-#[ignore]
 fn test_input_row_value_2() {
     let input_word = "hkxqfrqmsixfplbkpkdfzzszjxmdjtdkjlprrvr3gghlrqckqtbng";
     let result = trebuchet::get_two_digit_number(input_word);
@@ -127,4 +124,18 @@ fn test_input_row_value_4() {
     let result = trebuchet::get_two_digit_number(input_word);
 
     assert_eq!(result, 52);
+}
+
+#[test]
+fn test_sample_part1() {
+    let result = trebuchet::get_input_sum("./sample_part1.txt");
+
+    assert_eq!(result, 142);
+}
+
+#[test]
+fn test_sample_part2() {
+    let result = trebuchet::get_input_sum("./sample_part2.txt");
+
+    assert_eq!(result, 281);
 }

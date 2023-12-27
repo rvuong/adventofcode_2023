@@ -1,102 +1,147 @@
-use regex::{Captures, Regex};
 use std::fs::read_to_string;
 
-// order_asc: true=asc, false=desc
-fn get_digit(input: &&str, order_asc: bool) -> Option<u32> {
-    for i in 0..input.len() {
-        let index = match order_asc {
-            true => i,
-            false => input.len() - i - 1,
-        };
-
-        let char = input.chars().nth(index).unwrap();
-
-        if char.is_numeric() {
-            return char.to_digit(10); // to_digit() returns an Option
-        }
-    }
-
-    None
+enum Order {
+    Start,
+    End,
 }
 
 // Convert string numbers into int values
 // eg "[two]1[nine]" should be converted into "[2]1[9]"
 fn numerize_string_numbers(input: String) -> String {
-    // Can't use ".replace()" because the replace is not starting by left of the String,
-    // but by the pattern searched.
-    // input
-    //     .replace("one", "1")
-    //     .replace("two", "2")
-    //     .replace("three", "3")
-    //     .replace("four", "4")
-    //     .replace("five", "5")
-    //     .replace("six", "6")
-    //     .replace("seven", "7")
-    //     .replace("eight", "8")
-    //     .replace("nine", "9")
-    // result:      "eightwothree"  -> "eigh2three" (2) -> "eigh23"
-    // expected:    "eightwothree"  -> "8wothree" (8)   -> "8wo3"
-    // So, we must instead parse the String from left to right, and replace case by case.
-    // println!("$> input: {:?}", input);
+    let result = numerize_starting_string_numbers(input);
 
-    let output: String = input;
+    numerize_ending_string_numbers(result)
+}
 
-    // Replace 1st occurrence of number patterns in the string:
-    let re: Regex =
-        Regex::new(r"(?<first>one|two|three|four|five|six|seven|eight|nine|ten)").unwrap();
-    let replaced = re.replace(&output, |caps: &Captures| {
-        let captured_number = &caps[1];
+fn numerize_starting_string_numbers(input: String) -> String {
+    let numbers = [
+        "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
+    ];
 
-        match captured_number {
-            "one" => "1",
-            "two" => "2",
-            "three" => "3",
-            "four" => "4",
-            "five" => "5",
-            "six" => "6",
-            "seven" => "7",
-            "eight" => "8",
-            _ => "9",
+    for i in 0..(input.len()) {
+        for number in numbers {
+            let number_len = number.len();
+            let substring = input.get(i..number_len + i);
+            if substring.is_some() && substring.unwrap().eq(number) {
+                let digit = match number {
+                    "one" => "1",
+                    "two" => "2",
+                    "three" => "3",
+                    "four" => "4",
+                    "five" => "5",
+                    "six" => "6",
+                    "seven" => "7",
+                    "eight" => "8",
+                    "nine" => "9",
+                    _ => "",
+                };
+
+                let result = format!(
+                    "{}{}{}",
+                    input.get(..i).unwrap(),
+                    digit,
+                    input.get(number_len + i..).unwrap()
+                );
+
+                return result;
+            }
         }
-    });
-    let output = format!("{}", replaced);
+    }
 
-    // Replace last occurrence of number patterns in the string:
-    let reverse: String = output.chars().rev().collect();
-    let rev_re: Regex =
-        Regex::new(r"(?<last>eno|owt|eerht|ruof|evif|xis|neves|thgie|enin|net)").unwrap();
-    let rev_replaced = rev_re.replace(&reverse, |caps: &Captures| {
-        let captured_number = &caps[1];
+    input
+}
 
-        match captured_number {
-            "eno" => "1",
-            "owt" => "2",
-            "eerht" => "3",
-            "ruof" => "4",
-            "evif" => "5",
-            "xis" => "6",
-            "neves" => "7",
-            "thgie" => "8",
-            _ => "9",
+fn numerize_ending_string_numbers(input: String) -> String {
+    let numbers = [
+        "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
+    ];
+
+    for i in (0..input.len()).rev() {
+        for number in numbers {
+            let number_len = number.len();
+            let end = i + 1;
+            let start = if i >= number_len - 1 {
+                i + 1 - number_len
+            } else {
+                0
+            };
+
+            let substring = input.get(start..end);
+            if substring.is_some() && substring.unwrap().eq(number) {
+                let digit = match number {
+                    "one" => "1",
+                    "two" => "2",
+                    "three" => "3",
+                    "four" => "4",
+                    "five" => "5",
+                    "six" => "6",
+                    "seven" => "7",
+                    "eight" => "8",
+                    "nine" => "9",
+                    _ => "",
+                };
+
+                let result = format!(
+                    "{}{}{}",
+                    input.get(..start).unwrap(),
+                    digit,
+                    input.get(end..).unwrap()
+                );
+
+                return result;
+            }
         }
-    });
-    let reordered: String = rev_replaced.chars().rev().collect();
+    }
 
-    reordered
+    input
 }
 
 pub fn get_two_digit_number(input: &str) -> u32 {
-    let input = numerize_string_numbers(input.to_string());
-    let input = input.as_str();
+    let tmp = numerize_string_numbers(String::from(input));
 
-    let first_digit = get_digit(&input, true);
-    let last_digit = get_digit(&input, false);
+    let chars_vec: Vec<char> = tmp.chars().collect();
+    let first_digit_index = digit_index(&chars_vec, Order::Start);
+    let first_char = chars_vec.get(first_digit_index);
+    let last_digit_index = digit_index(&chars_vec, Order::End);
+    let last_char = chars_vec.get(last_digit_index);
 
-    if first_digit.is_none() || last_digit.is_none() {
+    if first_char.is_none() || last_char.is_none() {
         return 0;
     }
 
-    first_digit.unwrap() * 10 + last_digit.unwrap()
+    let first_digit = char2int(first_char.unwrap());
+    let last_digit = char2int(last_char.unwrap());
+
+    first_digit * 10 + last_digit
+}
+
+fn char2int(input: &char) -> u32 {
+    let str = format!("{}", input);
+
+    str.parse::<u32>().unwrap()
+}
+
+fn digit_index(input: &Vec<char>, order: Order) -> usize {
+    match order {
+        Order::Start => {
+            for i in 0..input.len() {
+                let c = input.get(i).unwrap();
+                if c.is_ascii_digit() {
+                    return i;
+                }
+            }
+        }
+        Order::End => {
+            for i in (0..input.len()).rev() {
+                let c = input.get(i).unwrap();
+                if c.is_ascii_digit() {
+                    return i;
+                }
+            }
+        }
+    }
+
+    0_usize
 }
 
 pub fn get_input_sum(file: &str) -> u32 {
