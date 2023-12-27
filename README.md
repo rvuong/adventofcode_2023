@@ -5,6 +5,18 @@ Advent of Code 2023
 
 - Step 1 was done successfully.
 
+## Day 10:
+
+- 
+
+## Day 9:
+
+- Fail
+
+## Day 8: Haunted Wasteland
+
+- Day 8, part 1 was done successfully.
+
 ## Day 7: Camel Cards
 
 - Fail
@@ -42,3 +54,4 @@ Advent of Code 2023
 - Step 1 was done successfully.
 - Step 2: The result provided by the current code was rejected:
 > That's not the right answer; your answer is too high. If you're stuck, make sure you're using the full input data; there are also some general tips on the about page, or you can ask for hints on the subreddit. Please wait one minute before trying again. [Return to Day 1]
+- Code cleaning

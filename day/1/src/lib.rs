@@ -1,35 +1,5 @@
-use regex::{ Captures, Regex };
-use std::fmt;
+use regex::{Captures, Regex};
 use std::fs::read_to_string;
-
-enum Number {
-    // One,
-    // Two,
-    // Three,
-    // Four,
-    // Five,
-    // Six,
-    // Seven,
-    // Eight,
-    // Nine,
-}
-
-impl fmt::Display for Number {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        // match self {
-        //     Number::One => write!(f, "one"),
-        //     Number::Two => write!(f, "two"),
-        //     Number::Three => write!(f, "three"),
-        //     Number::Four => write!(f, "four"),
-        //     Number::Five => write!(f, "five"),
-        //     Number::Six => write!(f, "six"),
-        //     Number::Seven => write!(f, "seven"),
-        //     Number::Eight => write!(f, "eight"),
-        //     Number::Nine => write!(f, "nine"),
-        // }
-        write!(f, "one")
-    }
-}
 
 // order_asc: true=asc, false=desc
 fn get_digit(input: &&str, order_asc: bool) -> Option<u32> {
@@ -72,7 +42,8 @@ fn numerize_string_numbers(input: String) -> String {
     let output: String = input;
 
     // Replace 1st occurrence of number patterns in the string:
-    let re: Regex = Regex::new(r"(?<first>one|two|three|four|five|six|seven|eight|nine|ten)").unwrap();
+    let re: Regex =
+        Regex::new(r"(?<first>one|two|three|four|five|six|seven|eight|nine|ten)").unwrap();
     let replaced = re.replace(&output, |caps: &Captures| {
         let captured_number = &caps[1];
 
@@ -92,7 +63,8 @@ fn numerize_string_numbers(input: String) -> String {
 
     // Replace last occurrence of number patterns in the string:
     let reverse: String = output.chars().rev().collect();
-    let rev_re: Regex = Regex::new(r"(?<last>eno|owt|eerht|ruof|evif|xis|neves|thgie|enin|net)").unwrap();
+    let rev_re: Regex =
+        Regex::new(r"(?<last>eno|owt|eerht|ruof|evif|xis|neves|thgie|enin|net)").unwrap();
     let rev_replaced = rev_re.replace(&reverse, |caps: &Captures| {
         let captured_number = &caps[1];
 
